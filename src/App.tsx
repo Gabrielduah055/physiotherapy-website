@@ -93,9 +93,43 @@ const footerUtilityLinks = [
   { label: "Changelog", href: "#" }
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 26 },
-  show: { opacity: 1, y: 0 }
+const scrollViewport = { once: false, amount: 0.12 };
+
+const staggerReveal = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08
+    }
+  }
+};
+
+const revealUp = {
+  hidden: { opacity: 0, y: 38, scale: 0.98 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
+  }
+};
+
+const revealLeft = {
+  hidden: { opacity: 0, x: -36 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
+  }
+};
+
+const revealRight = {
+  hidden: { opacity: 0, x: 36 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
+  }
 };
 
 function getNavTarget(item: string) {
@@ -250,83 +284,84 @@ export default function App() {
   };
 
   return (
-    <div className="bg-white text-[#062b16]">
+    <div className="overflow-x-hidden bg-white text-[#062b16]">
+      <nav className="fixed left-1/2 top-3 z-[1000] flex w-[min(1280px,calc(100vw-1.5rem))] -translate-x-1/2 items-center justify-between rounded-md bg-[#052b14]/95 px-6 py-4 text-white shadow-[0_16px_35px_rgba(0,0,0,0.16)] backdrop-blur-md md:w-[min(1280px,calc(100vw-2.5rem))] md:px-8">
+        <div className="flex items-center gap-3">
+          <LogoMark />
+          <div className="hidden items-center gap-3 text-[12px] font-semibold md:flex">
+            {navItems.map((item, index) => (
+              <a
+                className={`nav-pill ${index === 0 ? "nav-pill-active" : ""}`}
+                href={`#${getNavTarget(item)}`}
+                key={item}
+                onClick={(event) => handleNavClick(event, item)}
+              >
+                {index === 0 ? <span className="nav-dot" aria-hidden="true" /> : null}
+                {item}
+              </a>
+            ))}
+          </div>
+        </div>
+        <button
+          type="button"
+          className="grid h-11 w-11 place-items-center rounded-md bg-white/10 text-2xl text-[#d7e7ce] transition hover:bg-white/16 hover:text-white md:hidden"
+          aria-label="Open navigation menu"
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((open) => !open)}
+        >
+          <i className="uil uil-bars" aria-hidden="true" />
+        </button>
+        <a
+          href="tel:988023432"
+          className="group hidden items-center gap-2 text-sm font-semibold text-[#d7e7ce] transition hover:text-white md:flex"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            className="h-5 w-5 text-[#a8bf95] transition group-hover:rotate-[-8deg] group-hover:text-white"
+            fill="none"
+          >
+            <path
+              d="M7.2 4.8 9.8 7.4 8.3 9.7c.9 1.8 2.2 3.1 4 4l2.3-1.5 2.6 2.6-1.3 3.1c-.3.7-1.1 1.1-1.9.9-4.7-1.2-8.5-5-9.7-9.7-.2-.8.2-1.6.9-1.9l2-1.4Z"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          9880-23432
+        </a>
+        <AnimatePresence>
+          {isMenuOpen ? (
+            <motion.div
+              className="absolute left-0 right-0 top-[86px] z-[1001] grid gap-2 rounded-md border border-white/10 bg-[#073119] p-3 shadow-[0_18px_45px_rgba(0,0,0,0.24)] md:hidden"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+            >
+              {navItems.map((item, index) => (
+                <a
+                  className={`nav-pill ${index === 0 ? "nav-pill-active" : ""}`}
+                  href={`#${getNavTarget(item)}`}
+                  key={item}
+                  onClick={(event) => handleNavClick(event, item)}
+                >
+                  {index === 0 ? <span className="nav-dot" aria-hidden="true" /> : null}
+                  {item}
+                </a>
+              ))}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </nav>
+
       <header className="w-full">
         <section className="relative overflow-visible bg-[#052b14] text-white">
           <div className="absolute right-[max(3rem,calc((100vw-1280px)/2+3rem))] top-28 h-72 w-72 text-[#0d3a20]/70">
             <AbstractMark />
           </div>
-
-          <nav className="sticky top-3 z-50 mx-auto flex w-[min(1280px,calc(100%-1.5rem))] items-center justify-between rounded-md bg-[#052b14]/95 px-6 py-4 shadow-[0_16px_35px_rgba(0,0,0,0.16)] backdrop-blur-md md:w-[min(1280px,calc(100%-2.5rem))] md:px-8">
-            <div className="flex items-center gap-3">
-              <LogoMark />
-              <div className="hidden items-center gap-3 text-[12px] font-semibold md:flex">
-                {navItems.map((item, index) => (
-                  <a
-                    className={`nav-pill ${index === 0 ? "nav-pill-active" : ""}`}
-                    href={`#${getNavTarget(item)}`}
-                    key={item}
-                    onClick={(event) => handleNavClick(event, item)}
-                  >
-                    {index === 0 ? <span className="nav-dot" aria-hidden="true" /> : null}
-                    {item}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <button
-              type="button"
-              className="grid h-11 w-11 place-items-center rounded-md bg-white/10 text-2xl text-[#d7e7ce] transition hover:bg-white/16 hover:text-white md:hidden"
-              aria-label="Open navigation menu"
-              aria-expanded={isMenuOpen}
-              onClick={() => setIsMenuOpen((open) => !open)}
-            >
-              <i className="uil uil-bars" aria-hidden="true" />
-            </button>
-            <a
-              href="tel:988023432"
-              className="group hidden items-center gap-2 text-sm font-semibold text-[#d7e7ce] transition hover:text-white md:flex"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                className="h-5 w-5 text-[#a8bf95] transition group-hover:rotate-[-8deg] group-hover:text-white"
-                fill="none"
-              >
-                <path
-                  d="M7.2 4.8 9.8 7.4 8.3 9.7c.9 1.8 2.2 3.1 4 4l2.3-1.5 2.6 2.6-1.3 3.1c-.3.7-1.1 1.1-1.9.9-4.7-1.2-8.5-5-9.7-9.7-.2-.8.2-1.6.9-1.9l2-1.4Z"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              9880-23432
-            </a>
-            <AnimatePresence>
-              {isMenuOpen ? (
-                <motion.div
-                  className="absolute left-6 right-6 top-[86px] z-40 grid gap-2 rounded-md border border-white/10 bg-[#073119] p-3 shadow-[0_18px_45px_rgba(0,0,0,0.24)] md:hidden"
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {navItems.map((item, index) => (
-                    <a
-                      className={`nav-pill ${index === 0 ? "nav-pill-active" : ""}`}
-                      href={`#${getNavTarget(item)}`}
-                      key={item}
-                      onClick={(event) => handleNavClick(event, item)}
-                    >
-                      {index === 0 ? <span className="nav-dot" aria-hidden="true" /> : null}
-                      {item}
-                    </a>
-                  ))}
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </nav>
+          <div className="h-[86px] md:h-[92px]" aria-hidden="true" />
 
           <div id="home" className="relative z-10 mx-auto grid min-h-[330px] max-w-[1280px] gap-8 px-6 pb-16 pt-12 md:px-8 lg:grid-cols-[0.9fr_1.1fr]">
             <p className="max-w-[390px] self-start text-sm leading-6 text-white/80">
@@ -392,24 +427,27 @@ export default function App() {
           className="mt-0 bg-[#f0f6ea] py-20 md:py-24"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeUp}
-          transition={{ duration: 0.55 }}
+          viewport={scrollViewport}
+          variants={staggerReveal}
         >
           <div className="mx-auto max-w-[1280px] px-6 md:px-14">
-            <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <motion.div
+              className="mb-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between"
+              variants={revealUp}
+            >
               <h2 className="text-[34px] font-bold leading-none md:text-[42px]">
                 Physiotherapy <span className="text-[#9bb78a]">Services</span>
               </h2>
               <a className="flex items-center gap-2 rounded-md bg-[#052f16] px-4 py-2 text-[12px] font-semibold text-white" href="#">
                 All Services <ArrowBox />
               </a>
-            </div>
+            </motion.div>
             <div className="grid gap-5 lg:grid-cols-3">
               {services.map((service) => (
                 <motion.article
                   className="rounded-sm bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_22px_40px_rgba(8,41,21,0.12)]"
                   key={service.title}
+                  variants={revealUp}
                   whileHover={{ y: -6 }}
                 >
                   <h3 className="mb-3 text-[22px] font-bold">{service.title}</h3>
@@ -441,18 +479,23 @@ export default function App() {
             className="mx-auto mt-24 grid max-w-[1120px] gap-20 px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center"
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={fadeUp}
-            transition={{ duration: 0.55 }}
+            viewport={scrollViewport}
+            variants={staggerReveal}
           >
-            <div className="relative">
+            <motion.div className="relative" variants={revealLeft}>
               <img src={aboutImage} alt="Clinic team supporting a recovery patient" className="h-[360px] w-full object-cover" />
-              <div className="absolute bottom-0 left-0 bg-[#052f16] px-8 py-6 text-white">
+              <motion.div
+                className="absolute bottom-0 left-0 bg-[#052f16] px-8 py-6 text-white"
+                initial={{ opacity: 0, scale: 0.92 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={scrollViewport}
+                transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <p className="text-[42px] font-bold leading-none">15+</p>
                 <p className="mt-1 text-[12px] leading-4 text-[#c8d8b8]">Years of<br />Experience</p>
-              </div>
-            </div>
-            <div>
+              </motion.div>
+            </motion.div>
+            <motion.div variants={revealRight}>
               <h2 className="max-w-[560px] text-[34px] font-bold leading-[1.08] md:text-[42px]">
                 Expert <span className="text-[#9bb78a]">Physiotherapy</span>
                 <br />
@@ -466,7 +509,7 @@ export default function App() {
               <a className="mt-7 inline-flex items-center gap-2 rounded-md bg-[#052f16] px-4 py-2 text-[12px] font-semibold text-white" href="#">
                 Read More <ArrowBox />
               </a>
-            </div>
+            </motion.div>
           </motion.div>
         </section>
 
@@ -474,14 +517,13 @@ export default function App() {
           className="bg-[#f0f6ea] py-20 md:py-24"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeUp}
-          transition={{ duration: 0.55 }}
+          viewport={scrollViewport}
+          variants={staggerReveal}
         >
           <div className="relative mx-auto grid max-w-[1280px] gap-10 px-6 md:px-16 lg:block lg:min-h-[720px]">
-            <Star className="bottom-16 left-[58%] h-72 w-72 text-[#dce8d5]" />
-            <Star className="right-10 top-20 h-20 w-20 text-[#dce8d5]" />
-            <div className="max-w-[500px]">
+            <Star className="bottom-16 left-[58%] hidden h-72 w-72 text-[#dce8d5] lg:block" />
+            <Star className="right-10 top-20 hidden h-20 w-20 text-[#dce8d5] lg:block" />
+            <motion.div className="max-w-[500px]" variants={revealUp}>
               <h2 className="text-[34px] font-bold leading-[1.08] md:text-[42px]">
                 Our <span className="text-[#9bb78a]">3-Step</span> Recovery
                 <br />
@@ -491,9 +533,9 @@ export default function App() {
                 We believe recovery is more than treatment. It is a journey. Our certified
                 physiotherapists combine clinical expertise with personalized care to help you recover.
               </p>
-            </div>
+            </motion.div>
             {process.map((item, index) => (
-              <article
+              <motion.article
                 className={`relative w-full lg:absolute lg:max-w-[340px] ${
                   index === 0
                     ? "lg:right-2 lg:top-10"
@@ -502,6 +544,7 @@ export default function App() {
                       : "lg:bottom-8 lg:left-0"
                 }`}
                 key={item.step}
+                variants={revealUp}
               >
                 <div className="mb-3 flex items-center gap-4">
                   <span className="text-[14px] font-semibold text-[#667367]">{item.step}</span>
@@ -509,20 +552,34 @@ export default function App() {
                 </div>
                 <img src={item.image} alt={item.alt} className="h-[170px] w-full object-cover" />
                 <p className="mt-3 text-[12px] font-medium leading-5 text-[#193724]">{item.copy}</p>
-              </article>
+              </motion.article>
             ))}
-            <a className="relative flex w-fit items-center gap-2 rounded-md bg-[#052f16] px-4 py-2 text-[12px] font-semibold text-white lg:absolute lg:bottom-8 lg:right-0" href="#">
+            <motion.a
+              className="relative flex w-fit items-center gap-2 rounded-md bg-[#052f16] px-4 py-2 text-[12px] font-semibold text-white lg:absolute lg:bottom-8 lg:right-0"
+              href="#"
+              variants={revealUp}
+            >
               Start Your Recovery Journey <ArrowBox />
-            </a>
+            </motion.a>
           </div>
         </motion.section>
 
-        <section id="reviews" className="py-24">
+        <motion.section
+          id="reviews"
+          className="py-24"
+          initial="hidden"
+          whileInView="show"
+          viewport={scrollViewport}
+          variants={staggerReveal}
+        >
           <div className="mx-auto max-w-[1120px] px-8">
-            <h2 className="mb-14 text-center text-[34px] font-bold md:text-[40px]">
+            <motion.h2 className="mb-14 text-center text-[34px] font-bold md:text-[40px]" variants={revealUp}>
               What Our <span className="text-[#9bb78a]">Patient's</span> Says
-            </h2>
-            <div className="grid grid-cols-[34px_1fr_34px] items-center gap-3 md:grid-cols-[44px_1fr_44px] md:gap-8">
+            </motion.h2>
+            <motion.div
+              className="grid grid-cols-[34px_1fr_34px] items-center gap-3 md:grid-cols-[44px_1fr_44px] md:gap-8"
+              variants={revealUp}
+            >
               <button
                 className="grid h-10 w-10 place-items-center rounded-sm bg-[#f0f4ee] text-xl"
                 onClick={() => setTestimonialIndex((testimonialIndex + testimonials.length - 1) % testimonials.length)}
@@ -557,23 +614,35 @@ export default function App() {
               >
                 &gt;
               </button>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="border-y border-[#e5ece0] py-8">
+        <motion.section
+          className="border-y border-[#e5ece0] py-8"
+          initial="hidden"
+          whileInView="show"
+          viewport={scrollViewport}
+          variants={staggerReveal}
+        >
           <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-8 overflow-hidden px-8 text-[#737b73]">
             {partners.map((partner) => (
-              <span className="shrink-0 text-[17px] font-bold text-[#6c746d]" key={partner}>
+              <motion.span className="shrink-0 text-[17px] font-bold text-[#6c746d]" key={partner} variants={revealUp}>
                 {partner}
-              </span>
+              </motion.span>
             ))}
           </div>
-        </section>
+        </motion.section>
       </main>
 
-      <footer className="w-full pt-10">
-        <div className="relative overflow-hidden bg-[#052b14] px-6 py-9 text-white sm:px-10">
+      <motion.footer
+        className="w-full pt-10"
+        initial="hidden"
+        whileInView="show"
+        viewport={scrollViewport}
+        variants={staggerReveal}
+      >
+        <motion.div className="relative overflow-hidden bg-[#052b14] px-6 py-9 text-white sm:px-10" variants={revealUp}>
           <div className="absolute left-[55%] top-[-55px] h-52 w-52 text-[#174423]">
             <AbstractMark />
           </div>
@@ -587,10 +656,13 @@ export default function App() {
               9880-23432
             </a>
           </div>
-        </div>
+        </motion.div>
         <div className="bg-[#f0f6ea]">
-          <div className="mx-auto flex max-w-[1280px] flex-wrap items-start gap-x-8 gap-y-10 px-6 py-10 sm:px-10 sm:py-12">
-          <div className="basis-full sm:flex-1 sm:basis-[260px] lg:basis-[300px]">
+          <motion.div
+            className="mx-auto flex max-w-[1280px] flex-wrap items-start gap-x-8 gap-y-10 px-6 py-10 sm:px-10 sm:py-12"
+            variants={staggerReveal}
+          >
+          <motion.div className="basis-full sm:flex-1 sm:basis-[260px] lg:basis-[300px]" variants={revealUp}>
             <h3 className="text-[16px] font-bold">Follow Us:</h3>
             <div className="mt-5 flex gap-3">
               {socialLinks.map((item) => (
@@ -610,24 +682,24 @@ export default function App() {
               Combining modern physiotherapy techniques with holistic care, we help your body heal and
               thrive.
             </p>
-          </div>
-          <div className="basis-[calc(50%-1rem)] sm:flex-1 sm:basis-[160px]">
+          </motion.div>
+          <motion.div className="basis-[calc(50%-1rem)] sm:flex-1 sm:basis-[160px]" variants={revealUp}>
             <h3 className="mb-5 text-[16px] font-bold">Quick Links</h3>
             {footerQuickLinks.map((item) => (
               <a className="block py-1 text-[13px] font-medium text-[#536058] transition hover:translate-x-1 hover:text-[#052f16]" href={item.href} key={item.label}>
                 {item.label}
               </a>
             ))}
-          </div>
-          <div className="basis-[calc(50%-1rem)] sm:flex-1 sm:basis-[170px]">
+          </motion.div>
+          <motion.div className="basis-[calc(50%-1rem)] sm:flex-1 sm:basis-[170px]" variants={revealUp}>
             <h3 className="mb-5 text-[16px] font-bold">Utility Pages</h3>
             {footerUtilityLinks.map((item) => (
               <a className="block py-1 text-[13px] font-medium text-[#536058] transition hover:translate-x-1 hover:text-[#052f16]" href={item.href} key={item.label}>
                 {item.label}
               </a>
             ))}
-          </div>
-          <div className="basis-full sm:flex-1 sm:basis-[280px] lg:basis-[300px]">
+          </motion.div>
+          <motion.div className="basis-full sm:flex-1 sm:basis-[280px] lg:basis-[300px]" variants={revealUp}>
             <h3 className="mb-5 text-[16px] font-bold">Subscribe Newsletter</h3>
             <p className="mb-4 text-[13px] font-medium leading-5 text-[#536058]">
               Subscribe to our newsletter for weekly updates, market & special offers.
@@ -636,9 +708,12 @@ export default function App() {
             <button className="mt-3 w-full rounded-md bg-[#052f16] px-4 py-3 text-[13px] font-semibold text-white">
               Subscribe Now
             </button>
-          </div>
-          </div>
-          <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-6 pb-5 text-[12px] font-semibold text-[#27352b] sm:flex-row sm:justify-between sm:px-10">
+          </motion.div>
+          </motion.div>
+          <motion.div
+            className="mx-auto flex max-w-[1280px] flex-col gap-3 px-6 pb-5 text-[12px] font-semibold text-[#27352b] sm:flex-row sm:justify-between sm:px-10"
+            variants={revealUp}
+          >
             <p>(c) 2025 Therapy by. All Rights Reserved.</p>
             <p className="flex flex-wrap gap-x-2 gap-y-1">
               <a className="transition hover:text-[#052f16]" href="#">
@@ -649,9 +724,9 @@ export default function App() {
                 Privacy Policy
               </a>
             </p>
-          </div>
+          </motion.div>
         </div>
-      </footer>
+      </motion.footer>
 
       <AnimatePresence>
         {isAppointmentOpen ? (
