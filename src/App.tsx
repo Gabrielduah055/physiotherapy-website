@@ -297,7 +297,7 @@ export default function App() {
 
   return (
     <div className="overflow-x-hidden bg-white text-[#062b16]">
-      <nav className="fixed left-1/2 top-3 z-[1000] flex w-[min(1280px,calc(100vw-1.5rem))] -translate-x-1/2 items-center justify-between rounded-md bg-[#052b14]/95 px-6 py-4 text-white shadow-[0_16px_35px_rgba(0,0,0,0.16)] backdrop-blur-md md:w-[min(1280px,calc(100vw-2.5rem))] md:px-8">
+      <nav className="fixed inset-x-0 top-0 z-[1000] flex items-center justify-between border-b border-white/10 bg-[#052b14]/95 px-4 py-3 text-white shadow-[0_10px_22px_rgba(0,0,0,0.14)] backdrop-blur-md md:px-8 md:py-4">
         <div className="flex items-center gap-3">
           <LogoMark />
           <div className="hidden items-center gap-3 text-[12px] font-semibold md:flex">
