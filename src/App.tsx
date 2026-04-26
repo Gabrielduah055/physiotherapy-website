@@ -93,7 +93,7 @@ const footerUtilityLinks = [
   { label: "Changelog", href: "#" }
 ];
 
-const scrollViewport = { once: false, amount: 0.12 };
+const scrollViewport = { once: true, amount: 0.12 };
 
 const staggerReveal = {
   hidden: {},
@@ -383,6 +383,8 @@ export default function App() {
                 src={heroImage}
                 alt="Physiotherapist treating a patient in a clinic"
                 className="absolute inset-0 h-full w-full object-cover object-center"
+                decoding="async"
+                fetchPriority="high"
               />
               <div className="absolute inset-y-0 left-0 hidden w-[38%] bg-gradient-to-r from-white via-white/92 to-white/0 lg:block" />
             </div>
@@ -452,7 +454,13 @@ export default function App() {
                 >
                   <h3 className="mb-3 text-[22px] font-bold">{service.title}</h3>
                   <div className="relative overflow-hidden rounded-sm">
-                    <img src={service.image} alt={service.alt} className="h-[205px] w-full object-cover" />
+                    <img
+                      src={service.image}
+                      alt={service.alt}
+                      className="h-[205px] w-full object-cover"
+                      decoding="async"
+                      loading="lazy"
+                    />
                     <span className="absolute bottom-3 right-3">
                       <ArrowBox />
                     </span>
@@ -483,7 +491,13 @@ export default function App() {
             variants={staggerReveal}
           >
             <motion.div className="relative" variants={revealLeft}>
-              <img src={aboutImage} alt="Clinic team supporting a recovery patient" className="h-[360px] w-full object-cover" />
+              <img
+                src={aboutImage}
+                alt="Clinic team supporting a recovery patient"
+                className="h-[360px] w-full object-cover"
+                decoding="async"
+                loading="lazy"
+              />
               <motion.div
                 className="absolute bottom-0 left-0 bg-[#052f16] px-8 py-6 text-white"
                 initial={{ opacity: 0, scale: 0.92 }}
@@ -550,7 +564,13 @@ export default function App() {
                   <span className="text-[14px] font-semibold text-[#667367]">{item.step}</span>
                   <h3 className="text-[22px] font-bold">{item.title}</h3>
                 </div>
-                <img src={item.image} alt={item.alt} className="h-[170px] w-full object-cover" />
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  className="h-[170px] w-full object-cover"
+                  decoding="async"
+                  loading="lazy"
+                />
                 <p className="mt-3 text-[12px] font-medium leading-5 text-[#193724]">{item.copy}</p>
               </motion.article>
             ))}
@@ -596,7 +616,13 @@ export default function App() {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.35 }}
                 >
-                  <img src={testimonial.image} alt={testimonial.name} className="h-[150px] w-[150px] rounded-full object-cover md:h-[180px] md:w-[180px]" />
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="h-[150px] w-[150px] rounded-full object-cover md:h-[180px] md:w-[180px]"
+                    decoding="async"
+                    loading="lazy"
+                  />
                   <div className="relative border-l border-[#9bb78a] pl-8">
                     <span className="absolute right-6 top-0 text-[90px] font-bold leading-none text-[#edf1eb]">
                       "
