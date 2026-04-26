@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { MouseEvent } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import heroImage from "./assets/pexels-gustavo-fring-5888130.jpg";
 import processHeroImage from "./assets/pexels-worldsikhorg-14797760.jpg";
 import serviceOne from "./assets/pexels-funkcines-terapijos-centras-927573878-20860577.jpg";
@@ -143,28 +143,8 @@ function scrollFastToSection(targetId: string) {
     return;
   }
 
-  const startPosition = window.scrollY;
-  const targetPosition = target.getBoundingClientRect().top + window.scrollY - 12;
-  const distance = targetPosition - startPosition;
-  const duration = 430;
-  const startTime = performance.now();
-
-  const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
-
-  const step = (currentTime: number) => {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-
-    window.scrollTo(0, startPosition + distance * easeOutCubic(progress));
-
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    } else {
-      window.history.replaceState(null, "", `#${targetId}`);
-    }
-  };
-
-  requestAnimationFrame(step);
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.history.replaceState(null, "", `#${targetId}`);
 }
 
 function ArrowBox() {
@@ -275,7 +255,39 @@ export default function App() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
+  const menuPanelRef = useRef<HTMLDivElement | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const testimonial = testimonials[testimonialIndex];
+
+  useEffect(() => {
+    if (!isMenuOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+
+      if (menuPanelRef.current?.contains(target) || menuButtonRef.current?.contains(target)) {
+        return;
+      }
+
+      setIsMenuOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMenuOpen]);
 
   const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, item: string) => {
     event.preventDefault();
@@ -303,6 +315,7 @@ export default function App() {
           </div>
         </div>
         <button
+          ref={menuButtonRef}
           type="button"
           className="grid h-11 w-11 place-items-center rounded-md bg-white/10 text-2xl text-[#d7e7ce] transition hover:bg-white/16 hover:text-white md:hidden"
           aria-label="Open navigation menu"
@@ -334,6 +347,7 @@ export default function App() {
         <AnimatePresence>
           {isMenuOpen ? (
             <motion.div
+              ref={menuPanelRef}
               className="absolute left-0 right-0 top-[86px] z-[1001] grid gap-2 rounded-md border border-white/10 bg-[#073119] p-3 shadow-[0_18px_45px_rgba(0,0,0,0.24)] md:hidden"
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
