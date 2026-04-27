@@ -93,42 +93,47 @@ const footerUtilityLinks = [
   { label: "Changelog", href: "#" }
 ];
 
-const scrollViewport = { once: true, amount: 0.12 };
+// Amount raised to 0.22 so animations only fire once a meaningful
+// portion of the section is in view — prevents premature triggering.
+const scrollViewport = { once: true, amount: 0.22 };
 
 const staggerReveal = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.08
+      // Small lead-in before children start animating — removes the
+      // "all slamming in at once" feeling without noticeable delay.
+      delayChildren: 0.05,
+      staggerChildren: 0.1
     }
   }
 };
 
 const revealUp = {
-  hidden: { opacity: 0, y: 38, scale: 0.98 },
+  hidden: { opacity: 0, y: 32, scale: 0.98 },
   show: {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
   }
 };
 
 const revealLeft = {
-  hidden: { opacity: 0, x: -36 },
+  hidden: { opacity: 0, x: -32 },
   show: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
   }
 };
 
 const revealRight = {
-  hidden: { opacity: 0, x: 36 },
+  hidden: { opacity: 0, x: 32 },
   show: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.62, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
   }
 };
 
@@ -296,7 +301,7 @@ export default function App() {
   };
 
   return (
-    <div className="overflow-x-hidden bg-white text-[#062b16]">
+    <div className="bg-white text-[#062b16]">
       <nav className="fixed inset-x-0 top-0 z-[1000] flex items-center justify-between border-b border-white/10 bg-[#052b14]/95 px-4 py-3 text-white shadow-[0_10px_22px_rgba(0,0,0,0.14)] backdrop-blur-md md:px-8 md:py-4">
         <div className="flex items-center gap-3">
           <LogoMark />
